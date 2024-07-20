@@ -1,0 +1,1 @@
+20.Juli de scheibe fetzt. Na ill try and incorporate a training set so that the network can interpolate between points and at points it hasnt been at.
