@@ -107,14 +107,14 @@ class Neural_Network:
                 if i !=0:
                     file.write('\n')
                 for j in range(0, len(self.W2[i])):
-                    file.write(f'{str(self.W2[1][j])}' + ' ')
+                    file.write(f'{str(self.W2[i][j])}' + ' ')
 
         with open(self.path_w3, 'w') as file:
             for i in range (0,len(self.W3)):
                 if i !=0:
                     file.write('\n')
                 for j in range(0, len(self.W3[i])):
-                    file.write(f'{str(self.W3[1][j])}' + ' ')
+                    file.write(f'{str(self.W3[i][j])}' + ' ')
         
         print (f'Genome saved @: {self.path_w1} and {self.path_w2} modelcode: axd1f')
         
