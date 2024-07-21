@@ -5,14 +5,14 @@ import matplotlib.pyplot as plt
 class Neural_Network:
 
     def __init__(self, X, y, learning_rate, maximal_loss):
-        np.random.seed(0)
+        #np.random.seed(0)
         self.input_size = len(X[0])
-        self.hidden_lay1_size = 100
-        self.hidden_lay2_size = 100
+        self.hidden_lay1_size = 40
+        self.hidden_lay2_size = 40
         self.output_size = len(y[0])
-        self.W1 = np.random.randn(self.input_size, self.hidden_lay1_size)
-        self.W2 = np.random.randn(self.hidden_lay1_size, self.hidden_lay2_size)
-        self.W3 = np.random.randn(self.hidden_lay2_size, self.output_size)
+        self.W1 = np.random.rand(self.input_size, self.hidden_lay1_size)
+        self.W2 = np.random.rand(self.hidden_lay1_size, self.hidden_lay2_size)
+        self.W3 = np.random.rand(self.hidden_lay2_size, self.output_size)
         self.X = X
         self.y = y
         self.path_w2 = os.path.dirname(__file__)+ '/W2.txt'
@@ -29,16 +29,23 @@ class Neural_Network:
     def ddx_sigmoid(x):
         return x * (1 - x)
 
+    @staticmethod
+    def relu(z):
+        return np.maximum(0, z)
+
+    @staticmethod
+    def relu_derivative(z):
+        return np.where(z > 0, 1, 0)
+
     # Definiere die Verwärtspropagation def forward(self):
     def forward(self):
-        z1 = np.dot(self.X, self.W1) #to understand X * W1 = z1, sigmoid(z1) = a1, a1 * W2 = z2, sigmoid(z2) = a2, a2 * W3 = z3, sigmoid(z3) = a3
-        a1 = Neural_Network.sigmoid(z1)
-        z2 = np.dot(a1, self.W2)
-        a2 = Neural_Network.sigmoid(z2)
-        z3 = np.dot(a2, self.W3)
-        self.y_pred = Neural_Network.sigmoid(z3)
 
-        return self.y_pred, a1, a2
+        self.z1 = np.dot(self.X, self.W1) #to understand X * W1 = z1, sigmoid(z1) = a1, a1 * W2 = z2, sigmoid(z2) = a2, a2 * W3 = z3, sigmoid(z3) = a3
+        self.a1 = Neural_Network.sigmoid(self.z1)
+        self.z2 = np.dot(self.a1, self.W2)
+        self.a2 = Neural_Network.sigmoid(self.z2)
+        self.z3 = np.dot(self.a2, self.W3)
+        self.y_pred = Neural_Network.relu(self.z3)
 
     # Definiere die Verlustfunktion (hier verwenden wir den mittleren quadratischen Fehler)
     def loss (self):
@@ -54,23 +61,23 @@ class Neural_Network:
 
             while(self.l > self.maximal_loss):
                 #Vorwärtspropagation
-                self.y_pred, a1, a2 = Neural_Network.forward(self)
+                Neural_Network.forward(self)
         
                 #Berechne den VerLust
                 self.l = Neural_Network.loss(self)
 
-                
+                m = self.y.shape[0]
                 #backpropagation
-                grad_y_pred = 2 * (self.y_pred - self.y)
-                grad_z3 = grad_y_pred * Neural_Network.ddx_sigmoid(self.y_pred)
-                grad_W3 = np.dot(a2.T, grad_z3)
+                grad_y_pred = 2 * (self.y_pred - self.y) / m
+                grad_z3 = grad_y_pred * Neural_Network.relu_derivative(self.z3)
+                grad_W3 = np.dot(self.a2.T, grad_z3)
 
                 grad_a2 = np.dot(grad_z3, self.W3.T)
-                grad_z2 = grad_a2 * Neural_Network.ddx_sigmoid(a2) #grad_z2 = 
-                grad_W2 = np.dot(a1.T, grad_z2)
+                grad_z2 = grad_a2 * Neural_Network.ddx_sigmoid(self.a2) #grad_z2 = 
+                grad_W2 = np.dot(self.a1.T, grad_z2)
     
                 grad_a1 = np.dot(grad_z2, self.W2.T)
-                grad_z1 = grad_a1 * Neural_Network.ddx_sigmoid(a1)
+                grad_z1 = grad_a1 * Neural_Network.ddx_sigmoid(self.a1)
                 grad_W1 = np. dot(self.X.T, grad_z1)
 
                 # Aktualisiere die Gewichte und den Bias mithilfe des Gradientenabstiegs
@@ -195,9 +202,11 @@ class Neural_Network:
             for func in taskchain_call_network:
                 func(self)
 
+            return self.y_pred
+
         else:
 
-            print('check your jarvis.tasks() argument')
+            print('check your lol.tasks() argument')
 
 
 
