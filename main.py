@@ -5,16 +5,14 @@ import numpy as np
 
 if __name__ == '__main__':
 
-    list_size = 10
+    list_size = 30
 
-    X = np.empty((list_size,1))
-    y = np.empty((list_size,1))
+    X = np.array([[0],[1],[2],[3],[4]])
+    y = np.array([[1],[2],[3],[4],[5]])
 
-    for i in range(0, list_size):
-        X[i] = i
-        y[i] = i * 30
+    #
 
-    lol = Neural_Network(X,y,learning_rate = 0.0001, maximal_loss = 0.0001)
+    lol = Neural_Network(X,y,learning_rate = 0.0001, maximal_loss = 0.00001, momentum=0.5)
     
     #jarvis.tasks('train')
     lol.tasks('train')

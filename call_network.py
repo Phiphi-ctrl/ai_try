@@ -8,10 +8,10 @@ def graph_network(plot_range_max):
     y_axis = []
     for i in range(0, plot_range_max):
 
-        X = np.array([[i/10]])
-        lol = Neural_Network(X,y,learning_rate = 0.01, maximal_loss = 0.000001)
+        X = np.array([[i]])
+        lol = Neural_Network(X,y,learning_rate = 0.01, maximal_loss = 0.000001,momentum=0.9)
         y_axis.append(lol.tasks('call')[0][0])
-        x_axis.append(i/10)
+        x_axis.append(i)
             
     plt.plot(x_axis, y_axis)
     plt.show()
@@ -19,16 +19,16 @@ def graph_network(plot_range_max):
 if __name__ == '__main__': 
 
 
-    X = np.array([[2]])
+    X = np.array([[10]])
 
 
     y = np.empty((1,1))
 
-    lol = Neural_Network(X,y,learning_rate = 0.01, maximal_loss = 0.000001)
+    lol = Neural_Network(X,y,learning_rate = 0.01, maximal_loss = 0.000001,momentum=0.9)
     
     #jarvis.tasks('train')
     lol.tasks('call')
 
-    graph_network(50)
+    graph_network(19)
 
         

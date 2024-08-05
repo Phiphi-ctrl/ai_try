@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 
 class Neural_Network:
 
-    def __init__(self, X, y, learning_rate, maximal_loss):
+    def __init__(self, X, y, learning_rate, maximal_loss, momentum):
         #np.random.seed(0)
         self.input_size = len(X[0])
-        self.hidden_lay1_size = 40
-        self.hidden_lay2_size = 40
+        self.hidden_lay1_size = 10
+        self.hidden_lay2_size = 10
         self.output_size = len(y[0])
         self.W1 = np.random.rand(self.input_size, self.hidden_lay1_size)
         self.W2 = np.random.rand(self.hidden_lay1_size, self.hidden_lay2_size)
@@ -22,6 +22,13 @@ class Neural_Network:
         self.maximal_loss = maximal_loss
         self.pyplot_xaxis = []
         self.pyplot_yaxis = []
+        self.momentum = momentum
+
+        #initialize velocities:
+        self.vW1 = np.zeros_like(self.W1)
+        self.vW2 = np.zeros_like(self.W2)
+        self.vW3 = np.zeros_like(self.W3)
+        
 
     def sigmoid(x):
         return 1 / (1 + np.exp(-x))
@@ -80,10 +87,16 @@ class Neural_Network:
                 grad_z1 = grad_a1 * Neural_Network.ddx_sigmoid(self.a1)
                 grad_W1 = np. dot(self.X.T, grad_z1)
 
+                #update velocities:
+                self.vW3 = self.momentum * self.vW3 + self.learning_rate * grad_W3
+                self.vW2 = self.momentum * self.vW2 + self.learning_rate * grad_W2
+                self.vW1 = self.momentum * self.vW1 + self.learning_rate * grad_W1
+                
+
                 # Aktualisiere die Gewichte und den Bias mithilfe des Gradientenabstiegs
-                self.W1 -= self.learning_rate * grad_W1
-                self.W2 -= self.learning_rate * grad_W2
-                self.W3 -= self.learning_rate * grad_W3
+                self.W1 -= self.vW1
+                self.W2 -= self.vW2
+                self.W3 -= self.vW3
 
                 #plot learning behaviour
                 self.pyplot_xaxis.append(iteration)
